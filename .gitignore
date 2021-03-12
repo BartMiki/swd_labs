@@ -1,3 +1,6 @@
+.code
+.vscode
+venv
 *.aux
 *.bbl
 *.blg

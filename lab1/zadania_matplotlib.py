@@ -55,12 +55,18 @@ def convex_comb_triangle_loop(points):
     """
     assert len(points) == 3
     # TODO: Zadanie 4.1: Implementacja za pomocą pętli obliczenia wypukłych kombinacji liniowych dla wierzchołków trójkąta.
-    return []
+    results = []
+    for l1 in np.linspace(0, 1, num=10):
+        for l2 in np.linspace(0, 1, num=10):
+            l3 = 1 - (l1 + l2)
+            if l3 >= 0:
+                results.append(np.dot([l1, l2, l3], points))
+    return np.vstack(results)
 
 
 def draw_convex_combination_2d(points, cc_points):
     # TODO: Zadanie 4.1: Rysowanie wykresu dla wygenerowanej listy punktów (cc_points).
-
+    plt.plot(cc_points[:, 0], cc_points[:, 1], 'ro')
     # Drawing contour of the figure (with plt.plot).
     draw_contour_2d(points)
 
