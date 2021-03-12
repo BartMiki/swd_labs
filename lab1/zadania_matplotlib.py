@@ -229,19 +229,19 @@ def draw_vector_addition_ex1():
 
 if __name__ == "__main__":
     # for task 4.1
-    # draw_triangle_simple_1()
-    # draw_triangle_simple_2()
+    draw_triangle_simple_1()
+    draw_triangle_simple_2()
 
     # for task 4.2
-    # draw_triangle_1()
-    # draw_triangle_2()
-    # draw_rectangle()
-    # draw_hexagon()
-    # draw_not_convex()
+    draw_triangle_1()
+    draw_triangle_2()
+    draw_rectangle()
+    draw_hexagon()
+    draw_not_convex()
 
     # for task 4.3
-    # draw_tetrahedron()
-    # draw_cube()
+    draw_tetrahedron()
+    draw_cube()
 
     # for task 4.4
     draw_vector_addition_ex1()
