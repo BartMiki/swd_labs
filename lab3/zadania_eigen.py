@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
-
+from operator import itemgetter
 
 def vectors_uniform(k):
     """Uniformly generates k vectors."""
@@ -18,7 +18,7 @@ def visualize_transformation(A, vectors):
         # Plot original vector.
         plt.quiver(0.0, 0.0, v[0], v[1], width=0.008, color="blue", scale_units='xy', angles='xy', scale=1,
                    zorder=4)
-        plt.text(v[0]/2 + 0.25, v[1]/2, "v{0}".format(i), color="blue")
+        plt.text(v[0] / 2 + 0.25, v[1] / 2, "v{0}".format(i), color="blue")
 
         # Plot transformed vector.
         tv = A.dot(v)
@@ -44,19 +44,69 @@ def visualize_vectors(vectors, color="green"):
 def plot_eigenvectors(A):
     """Plots all eigenvectors of the given 2x2 matrix A."""
     # TODO: Zad. 4.1. Oblicz wektory własne A. Możesz wykorzystać funkcję np.linalg.eig
-    eigvec = []
+    eigvec = np.linalg.eig(A)[1]
     # TODO: Zad. 4.1. Upewnij się poprzez analizę wykresów, że rysowane są poprawne wektory własne (łatwo tu o pomyłkę).
-    visualize_vectors(eigvec)
+    visualize_vectors(eigvec.T)
 
 
 def EVD_decomposition(A):
     # TODO: Zad. 4.2. Uzupełnij funkcję tak by obliczała rozkład EVD zgodnie z zadaniem.
-    pass
+    l, K = np.linalg.eig(A)
+    L = np.diag(l)
+    K_inv = np.linalg.inv(K)
+
+    print("Macierz K\n", K)
+    print("Macierz L\n", L)
+    print("Macierz K_inv\n", K_inv)
+
+    A_hat = K.dot(L).dot(K_inv)
+    print("Macierz A\n", A)
+    print("Odtworzona macierz A\n", A_hat)
+    print("Są równe?", np.array_equal(A, A_hat.astype(int)))
+    print(30 * "-")
 
 
 def plot_attractors(A, vectors):
     # TODO: Zad. 4.3. Uzupełnij funkcję tak by generowała wykres z atraktorami.
-    pass
+    eigen_value, eigen_vector = np.linalg.eig(A)
+    eigen_vector = eigen_vector.T
+
+    attractors = {
+        'red': eigen_vector[0],
+        'orange': eigen_vector[0] * -1,
+    }
+    if not np.allclose(eigen_vector[0], eigen_vector[1]):
+        attractors = {
+            **attractors,
+            'green': eigen_vector[1],
+            'turquoise': eigen_vector[1] * -1,
+        }
+
+    for color, attractor in attractors.items():
+        plt.quiver(0.0, 0.0, attractor[0], attractor[1], width=0.008, color=color, scale_units='xy', angles='xy',
+                   scale=1, zorder=4)
+
+    for vector in vectors:
+        t_vec = vector.copy()
+        vector = vector / np.linalg.norm(vector)
+        for _ in range(500):
+            t_vec = A.dot(t_vec)
+            t_vec /= np.linalg.norm(t_vec)
+
+        distances = [(np.mean(np.abs(t_vec-a)), color, a) for color, a in attractors.items()]
+        distance, color, attractor = min(distances, key=itemgetter(0))
+        if distance > 0.01 and not np.allclose(attractor, t_vec):
+            # Don't converge
+            color = 'black'
+
+        plt.quiver(0.0, 0.0, vector[0], vector[1], width=0.005, color=color, scale_units='xy', angles='xy',
+                   scale=1, zorder=6)
+
+    plt.grid()
+    plt.xlim([-2, 2])
+    plt.ylim([-2, 2])
+    plt.margins(0.05)
+    plt.show()
 
 
 def show_eigen_info(A, vectors):
@@ -72,16 +122,13 @@ if __name__ == "__main__":
                   [0, 2]])
     show_eigen_info(A, vectors)
 
-
     A = np.array([[-1, 2],
                   [2, 1]])
     show_eigen_info(A, vectors)
 
-
     A = np.array([[3, 1],
                   [0, 2]])
     show_eigen_info(A, vectors)
-
 
     A = np.array([[2, -1],
                   [1, 4]])
