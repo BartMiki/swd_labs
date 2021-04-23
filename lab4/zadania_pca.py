@@ -4,6 +4,7 @@ import os
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 
 
 def pca_sklearn(data, n_comp=None):
@@ -20,8 +21,7 @@ def pca_sklearn(data, n_comp=None):
         n_comp = data.shape[1]
     # TODO: Implement PCA using scikit-learn library, class: sklearn.decomposition.PCA
     # TODO: Return the transformed data.
-    return None
-
+    return PCA(n_components=n_comp).fit_transform(data)
 
 
 def pca_manual(data, n_comp=None):
@@ -37,50 +37,46 @@ def pca_manual(data, n_comp=None):
         n_comp = data.shape[1]
 
     # TODO: 1) Adjust the data so that the mean of every column is equal to 0.
-
-
+    data -= data.mean(axis=0)
 
     # TODO: 2) Compute the covariance matrix. You can use the function from numpy (numpy.cov), or multiply appropriate matrices.
     # Warning: numpy.cov expects dimensions to be in rows and different observations in columns.
     #          You can transpose data or set rowvar=False flag.
+    cov_matrix = np.cov(data.T)
 
     print("\nCOVARIANCE MATRIX:")
-    print("TODO")
-
-
+    print(cov_matrix)
 
     # TODO: 3) Calculate the eigenvectors and eigenvalues of the covariance matrix.
     # You may use np.linalg.eig, which returns a tuple (eigval, eigvec).
     # Make sure that eigenvectors are unit vectors (PCA needs unit vectors).
-
-
+    eigval, eigvec = np.linalg.eig(cov_matrix)
+    eigvec = eigvec.T
 
     # TODO: 4) Sort eigenvalues (and their corresponding eigenvectors) in the descending order (e.g. by using argsort),
     #          and construct the matrix K with eigenvectors in the columns.
+    order = np.argsort(eigval)[::-1]
+    sorted_vectors = eigvec[order]
 
     print("\nSORTED EIGEN VALUES:")
-    print("TODO")
+    print(eigval[order])
     print("\nSORTED EIGEN VECTORS:")
-    print("TODO")
-
-
+    print(sorted_vectors)
 
     # TODO: 5) Select the components (n_comp).
-
-
+    selected_vectors = sorted_vectors[:n_comp]
 
     # TODO: 6) Calculate the transformed data.
-
-
+    transformed = np.dot(selected_vectors, data.T).T
 
     # TODO: 7) Calculate the covariance matrix of the transformed data.
+    cov_transform_matrix = np.cov(transformed.T)
 
     print("\nCOVARIANCE MATRIX OF THE TRANSFORMED DATA:")
-    print("TODO")
+    print(cov_transform_matrix)
 
     # TODO: 8) Return the transformed data.
-    return None
-
+    return transformed
 
 
 def plot_pca_result_2d(X, Y1, Y2):
@@ -142,5 +138,5 @@ if __name__ == "__main__":
     data = data_example1()
     run_pca_comparison(data, n_comp=2)
 
-    data = data_random(100, x_mean=0.0, x_std=1.0, y_mean=0.0, y_std=4.0, angle=-math.pi/4)
+    data = data_random(100, x_mean=0.0, x_std=1.0, y_mean=0.0, y_std=4.0, angle=-math.pi / 4)
     run_pca_comparison(data, n_comp=2)
