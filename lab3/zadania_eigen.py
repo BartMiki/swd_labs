@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from operator import itemgetter
 
+
 def vectors_uniform(k):
     """Uniformly generates k vectors."""
     vectors = []
@@ -85,6 +86,9 @@ def plot_attractors(A, vectors):
     for color, attractor in attractors.items():
         plt.quiver(0.0, 0.0, attractor[0], attractor[1], width=0.01, color=color, scale_units='xy', angles='xy',
                    scale=1, zorder=4)
+        num = 0 if color in ['red', 'orange'] else 1
+        text = 'eigv{0}'.format(num) if color in ['red', 'green'] else ''
+        plt.text(attractor[0] * 1.1, attractor[1] * 1.1, text, color=color, zorder=10)
 
     for vector in vectors:
         t_vec = vector.copy()
@@ -93,7 +97,7 @@ def plot_attractors(A, vectors):
             t_vec = A.dot(t_vec)
             t_vec /= np.linalg.norm(t_vec)
 
-        distances = [(np.mean(np.abs(t_vec-a)), color, a) for color, a in attractors.items()]
+        distances = [(np.mean(np.abs(t_vec - a)), color, a) for color, a in attractors.items()]
         distance, color, attractor = min(distances, key=itemgetter(0))
         if distance > 0.01 and not np.allclose(attractor, t_vec):
             # Don't converge
