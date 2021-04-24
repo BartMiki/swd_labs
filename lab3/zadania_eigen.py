@@ -83,7 +83,7 @@ def plot_attractors(A, vectors):
         }
 
     for color, attractor in attractors.items():
-        plt.quiver(0.0, 0.0, attractor[0], attractor[1], width=0.008, color=color, scale_units='xy', angles='xy',
+        plt.quiver(0.0, 0.0, attractor[0], attractor[1], width=0.01, color=color, scale_units='xy', angles='xy',
                    scale=1, zorder=4)
 
     for vector in vectors:
@@ -99,6 +99,8 @@ def plot_attractors(A, vectors):
             # Don't converge
             color = 'black'
 
+        # plt.quiver(0.0, 0.0, t_vec[0], t_vec[1], width=0.005, color=color, scale_units='xy', angles='xy',
+        #            scale=1, zorder=6)
         plt.quiver(0.0, 0.0, vector[0], vector[1], width=0.005, color=color, scale_units='xy', angles='xy',
                    scale=1, zorder=6)
 
