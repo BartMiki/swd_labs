@@ -1,5 +1,7 @@
 .code
 .vscode
+.ipynb_checkpoints
+
 venv
 *.aux
 *.bbl
