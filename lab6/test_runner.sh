@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./test_runner.sh myPythonScript.py
+# Usage: ./test_runner.sh lab6.py
 
 python3 $1 -svd custom -k 5 -f img/pink-floyd.jpg
 python3 $1 -svd library -k 5 -f img/pink-floyd.jpg
